@@ -138,6 +138,45 @@ body {
     background: var(--body-color);
     border-radius: 0.5vw;
 }
+
+
+
+.dropdown-logout {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--body-color);
+    border: 0.1vw solid var(--green-pale);
+    border-radius: 0.5vw;
+    box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.dropdown-logout ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-logout ul li {
+    padding: 1vh 2vw;
+}
+
+.dropdown-logout ul li a {
+    text-decoration: none;
+    color: var(--primary-text-color);
+    display: block;
+}
+
+.dropdown-logout ul li:hover {
+    background: var(--body-color);
+    border-radius: 0.5vw;
+}
+
+
+
+
 /* End of Header */
 
 /* Start of Side-bar */
@@ -546,6 +585,7 @@ body {
     width: 95vw;
     background: var(--secondary-text-color);
     border-radius: 3vh;
+    border: 20px solid var(--green-medium);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -581,9 +621,9 @@ body {
     /* width: 25%;  */
     height: 100%;
     display: flex;
-    justify-content: center; /* Center the image container */
+    margin-top: 5%;
     flex-direction: column;
-    align-items: center;
+    
     /* background-color: #0B5D0A; */
 }
 
@@ -640,6 +680,23 @@ body {
     margin: 1vh;
 }
 
+.popup-content .text-input-container .selects{
+    /* background-color: #0B5D0A; */
+    margin: 1vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content .text-input-container select {
+    /* background-color: #0B5D0A; */
+    font-size: 2vh;
+    height: 4.8vh;
+    padding: 1vh;
+    margin-top: .5vh;
+    border: 0.18vw solid var(--green-pale);
+    border-radius: 0.5vh;
+}
+
 /* 
 .popup-content .text-input-container .inputs div{
     background-color: #0B5D0A;
@@ -664,8 +721,8 @@ body {
 .popup-content .text-input-container .signature {
     /* background-color: #0B5D0A; */
     font-size: 2vh;
-    height: 5vh;
-    width: 15vw;
+    height: 100%;
+    width: 100%;
     padding: 1vh;
     margin-top: .5vh;
     border: 0.18vw solid var(--green-pale);

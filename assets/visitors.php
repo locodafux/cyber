@@ -160,12 +160,14 @@ if ($conn->connect_error) {
             echo "<td>" . $row['purpose_visit'] . "</td>";
             echo "<td>" . $row['date'] . "</td>";
             echo "<td>" . $row['time_in'] . "</td>";
-            echo "<td>" . $row['time_out'] . "</td>";
+            $time_out_display = ($row['time_out'] == '00:00:00') ? 'TBD' : $row['time_out'];
+            echo "<td>" . $time_out_display . "</td>";
             echo '  <td>
                         <div class="dropdown-container">
                             <button class="dropdown-button">Action</button>
                             <div class="dropdown-content" style="display: none;">
                                 <button data-regid="' . $row['reg_id'] . '" class="edit-button">Edit</button>
+                                 <button class="reg-time-out-button" data-regid="' . $row['reg_id'] . '">Time Out</button>
                             </div>
                         </div>
                     </td>';
@@ -180,8 +182,41 @@ if ($conn->connect_error) {
     // Close connection
     $conn->close();
 ?>
+</div>
 
-        </div>
+
+<script>
+    document.querySelectorAll('.reg-time-out-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const regId = this.getAttribute('data-regid');
+            // Send AJAX request
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'update_time_out.php');
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                   
+                    const response = xhr.responseText;
+                    if (response.startsWith('Error')) {
+                        
+                        alert(response);
+                    } else {
+                       
+                        alert(response);
+                        
+                        window.location.reload();
+                    }
+                } else {
+                    
+                    alert('Error: ' + xhr.statusText);
+                }
+            };
+            xhr.send('reg_id=' + encodeURIComponent(regId));
+        });
+    });
+</script>
+
+
         <div class="vip-table-container p-3" >
         <table class="table" id="vipTable" border="1">
     <thead class="thead-dark">
@@ -240,12 +275,14 @@ if ($conn->connect_error) {
                 echo "<td><img src='data:image/jpeg;base64,".base64_encode($row["images"])."' style='max-width:100px'></td>";
                 echo "<td>".$row["date"]."</td>";
                 echo "<td>".$row["time_in"]."</td>";
-                echo "<td>".$row["time_out"]."</td>";
+                $time_out_display = ($row['time_out'] == '00:00:00') ? 'TBD' : $row['time_out'];
+                echo "<td>" . $time_out_display . "</td>";
                 echo '  <td>
                 <div class="dropdown-container-vip">
                     <button class="dropdown-button">Action</button>
                     <div class="dropdown-content" style="display: none;">
                         <button data-vipid="' . $row['vip_id'] . '" class="edit-vip-button">Edit</button>
+                         <button class="vip-time-out-button" data-vipid="' . $row['vip_id'] . '">Time Out</button>
                     </div>
                 </div>
             </td>';
@@ -259,8 +296,37 @@ if ($conn->connect_error) {
     </tbody>
 </table>
 </div>
-        
     </div>
+
+<script>
+
+document.querySelectorAll('.vip-time-out-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const vipId = this.getAttribute('data-vipid');
+        // Send AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'update_time_out.php');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = xhr.responseText;
+                if (response.startsWith('Error')) {
+                    alert(response);
+                } else {
+                    alert(response);
+                    window.location.reload();
+                }
+            } else {
+                alert('Error: ' + xhr.statusText);
+            }
+        };
+        xhr.send('vip_id=' + encodeURIComponent(vipId));
+    });
+});
+
+
+</script>
+
 
     <div class="popup-camera" style="display: none;">
         <div class="popup-camera-content">
@@ -295,7 +361,7 @@ if ($conn->connect_error) {
 
             <!-- This input container is for regular visitors -->
             <div id="reg_input_container" class="input-container">
-            <div class="text-input-container">
+            <div class="text-input-container" >
                     <div class="inputs">
                         <div>
                             <div class="label"> Name: </div>
@@ -318,8 +384,8 @@ if ($conn->connect_error) {
                     </div>
 
 
-                    <div class="inputs">
-                    <label for="reg-rank">Rank:</label>
+                    <div class="selects">
+                    <label for="reg-rank">Rank:<br> </label>
                     <select id="reg-rank" name="reg-rank">
                         <option value="Private">Mr.</option>
                         <option value="Private">Ms.</option>
@@ -345,13 +411,7 @@ if ($conn->connect_error) {
                     </select>
                 </div>
                     
-                    <div class="inputs">
-                        <div>
-                            <div class="label"> Unit/Organization: </div>
-                            <input type="textbox" class="textbox" name="reg-unit">
-                        </div>
-                    </div>
-
+                    
                 </div>
 
                 <div class="text-input-container">
@@ -370,11 +430,19 @@ if ($conn->connect_error) {
                         </div>
                     </div>
 
+                    <div class="inputs">
+                        <div>
+                            <div class="label"> Unit/Organization: </div>
+                            <input type="textbox" class="textbox" name="reg-unit">
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
 
             <!-- this input container for VIP Visitors -->
-            <div id="vip_input_container" class="input-container" style="display: none;">
+            <div id="vip_input_container" class="input-container" style="display: none;3">
                 <div class="image-container">
                     <div id="image_holder" class="image-holder" ></div>
                     <div class="image-button-container">
@@ -406,8 +474,8 @@ if ($conn->connect_error) {
                         </div>
                     </div>
 
-                    <div class="inputs">
-                    <label for="vip-rank">Rank:</label>
+                    <div class="selects">
+                    <label for="vip-rank">Rank:<br></label>
                         <select id="vip-rank" name="vip-rank">
                             <option value="Private">Mr.</option>
                             <option value="Private">Ms.</option>
@@ -433,19 +501,7 @@ if ($conn->connect_error) {
                         </select>
                             </div>
                     
-                    <div class="inputs">
-                        <div>
-                            <div class="label"> Unit/Organization: </div>
-                            <input type="textbox" class="textbox" name="vip-unit">
-                        </div>
-                    </div>
-
-                    <div class="inputs">
-                        <div>
-                            <div class="label"> Contact no: </div>
-                            <input type="number" class="textbox" name="vip-contact">
-                        </div>
-                    </div>
+                    
                      
 
                 </div>
@@ -466,19 +522,44 @@ if ($conn->connect_error) {
                         </div>
                     </div>
 
-              
+                    <div class="inputs">
+                        <div>
+                            <div class="label"> Unit/Organization: </div>
+                            <input type="textbox" class="textbox" name="vip-unit">
+                        </div>
+                    </div>
 
                     <div class="inputs">
                         <div>
-                            <div class="label">Signature:</div>
-                            <canvas id="signatureCanvas" width="400" height="150" style="border: 0.18vw solid var(--green-pale);"></canvas>
-                            <img id="clearSignatureBtn" src="img/clear.png" class="clear-signature"></img>
+                            <div class="label"> Contact no: </div>
+                            <input type="number" class="textbox" name="vip-contact">
                         </div>
                     </div>
+
+              
+
                 </div>
+
+                <div class="text-input-container">
+                
+                    <div class="sign-container" style=" height: 70%">
+                        <div>
+                            <div class="label">Signature:</div>
+                            <canvas class="signature" id="signatureCanvas"></canvas>
+                            
+                        </div>
+                        <img id="clearSignatureBtn" src="img/clear.png" class="clear-signature"></img>
+                    </div>
+                
+                </div>
+
 
                
             </div>
+
+
+                
+
             <div class="popup-button-container">
                 <div id="add-visitor-btn"> Add Visitor</div>
                 <div id="cancel"> Cancel</div>
@@ -516,7 +597,7 @@ if ($conn->connect_error) {
                     </div>
                 </div>
 
-                <div class="inputs">
+                <div class="selects">
                     <label for="edit-reg-rank">Rank:</label>
                     <select id="edit-reg-rank" name="reg-rank">
                         <option value="Private">Mr.</option>
@@ -543,12 +624,7 @@ if ($conn->connect_error) {
                     </select>
                 </div>
 
-                <div class="inputs">
-                    <div>
-                        <div class="label"> Unit/Organization: </div>
-                        <input type="textbox" id="edit-reg-unit" class="textbox" name="reg-unit">
-                    </div>
-                </div>
+               
 
             </div>
 
@@ -568,6 +644,12 @@ if ($conn->connect_error) {
                     </div>
                 </div>
 
+                <div class="inputs">
+                    <div>
+                        <div class="label"> Unit/Organization: </div>
+                        <input type="textbox" id="edit-reg-unit" class="textbox" name="reg-unit">
+                    </div>
+                </div>
             
 
             </div>
@@ -582,7 +664,7 @@ if ($conn->connect_error) {
 <div class="popup-edit-vip">
     <div class="popup-content">
         <div class="popup-title">Edit Vip Visitor</div>
-        <input type="text" id="edit-vip-id" >
+        <input type="hidden" id="edit-vip-id" >
         <!-- This input container is for regular visitors -->
         <div id="edit-vip_input_container" class="input-container">
             <div class="text-input-container">
@@ -607,7 +689,7 @@ if ($conn->connect_error) {
                     </div>
                 </div>
 
-                <div class="inputs">
+                <div class="selects">
                     <label for="edit-vip-rank">Rank:</label>
                     <select id="edit-vip-rank" name="vip-rank">
                         <option value="Private">Mr.</option>
@@ -634,12 +716,7 @@ if ($conn->connect_error) {
                     </select>
                 </div>
 
-                <div class="inputs">
-                    <div>
-                        <div class="label"> Unit/Organization: </div>
-                        <input type="textbox" id="edit-vip-unit" class="textbox" name="vip-unit">
-                    </div>
-                </div>
+               
 
             </div>
 
@@ -662,6 +739,13 @@ if ($conn->connect_error) {
                     <div>
                         <div class="label"> Message: </div>
                         <input type="textbox" id="edit-vip-message" class="textbox" name="vip-purpose">
+                    </div>
+                </div>
+
+                <div class="inputs">
+                    <div>
+                        <div class="label"> Unit/Organization: </div>
+                        <input type="textbox" id="edit-vip-unit" class="textbox" name="vip-unit">
                     </div>
                 </div>
 

@@ -29,7 +29,7 @@
                     <span class="box-text">Admin</span>
                     <img src="img/downward-arrow.png" alt="arrow" class="box-arrow">
                 </div>
-                <div class="dropdown">
+                <div class="dropdown-logout">
                     <ul>
                         <li><a href="../assets/database/logout.php">Logout</a></li>
                     </ul>
@@ -42,8 +42,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         const box = document.querySelector('.box');
-        const dropdown = document.querySelector('.dropdown');
-
+        const dropdown = document.querySelector('.dropdown-logout');
         box.addEventListener('click', () => {
             dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
         });
