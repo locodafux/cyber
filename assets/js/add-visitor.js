@@ -14,6 +14,58 @@ function add_visitor() {
   const regContainer = document.getElementById("reg_input_container");
   const vipContainer = document.getElementById("vip_input_container");
 
+  let requiredFields = [];
+  let isValid = true;
+
+  if (
+    window.getComputedStyle(regContainer).display === "flex" &&
+    window.getComputedStyle(vipContainer).display === "none"
+  ) {
+    requiredFields = [
+      { name: "reg-name", type: "input" },
+      { name: "reg-designation", type: "input" },
+      { name: "reg-rank", type: "select" },
+      { name: "reg-unit", type: "input" },
+      { name: "reg-contact", type: "input" },
+      { name: "reg-purpose", type: "input" }
+    ];
+  } else if (
+    window.getComputedStyle(vipContainer).display === "flex" &&
+    window.getComputedStyle(regContainer).display === "none"
+  ) {
+    requiredFields = [
+      { name: "vip-name", type: "input" },
+      { name: "vip-designation", type: "input" },
+      { name: "vip-rank", type: "select" },
+      { name: "vip-unit", type: "input" },
+      { name: "vip-contact", type: "input" },
+      { name: "vip-purpose", type: "input" },
+      { name: "vip-comment", type: "input" }
+    ];
+  }
+
+  // Check if any required fields are empty
+  requiredFields.forEach(field => {
+    let element;
+    if (field.type === "input") {
+      element = document.querySelector(`input[name="${field.name}"]`);
+    } else if (field.type === "select") {
+      element = document.querySelector(`select[name="${field.name}"]`);
+    }
+
+    if (!element || element.value.trim() === "") {
+      isValid = false;
+      console.error(`Required field ${field.name} is empty or not found`);
+    }
+  });
+
+  if (!isValid) {
+    // Display error message or take appropriate action
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  // Proceed with adding the visitor if all required fields are filled out
   if (
     window.getComputedStyle(regContainer).display === "flex" &&
     window.getComputedStyle(vipContainer).display === "none"
@@ -25,7 +77,10 @@ function add_visitor() {
   ) {
     addVIPVisitor();
   }
+  clearInputs()
 }
+
+
 
 function addRegularVisitor() {
   console.log("Add Regular Visitor:");
@@ -35,7 +90,6 @@ function addRegularVisitor() {
   const designation = document.querySelector(
     'input[name="reg-designation"]'
   ).value;
-  const position = document.querySelector('input[name="reg-position"]').value;
   const rank = document.querySelector('select[name="reg-rank"]').value;
   const unit = document.querySelector('input[name="reg-unit"]').value;
   const contact = document.querySelector('input[name="reg-contact"]').value;
@@ -47,7 +101,6 @@ function addRegularVisitor() {
   const data = {
     name: name,
     designation: designation,
-    position: position,
     rank: rank,
     unit: unit,
     contact: contact,
@@ -76,11 +129,16 @@ function addRegularVisitor() {
       var alertBlock = document.getElementById("alertSuccess");
       var dataText = document.getElementById("data");
       dataText.innerHTML = data.message;
+      clearInputs();
       alertBlock.style.display = "block";
       setTimeout(function () {
         alertBlock.style.display = "none";
-      }, 5000); // 5000 milliseconds = 5 seconds
+        location.reload(); 
+      }, 1000); // 5000 milliseconds = 5 seconds
       console.log("Response:", data); // Log the response received from the server
+
+      // Clear inputs after successful addition
+      
     })
     .catch((error) => console.error("Error:", error));
 }
@@ -97,7 +155,6 @@ function addVIPVisitor() {
   const designation = document.querySelector(
     'input[name="vip-designation"]'
   ).value;
-  const position = document.querySelector('input[name="vip-position"]').value;
   const rank = document.querySelector('select[name="vip-rank"]').value;
   const unit = document.querySelector('input[name="vip-unit"]').value;
   const contact = document.querySelector('input[name="vip-contact"]').value;
@@ -115,7 +172,6 @@ function addVIPVisitor() {
     image: imageData, // Add the image data to the data object
     name: name,
     designation: designation,
-    position: position,
     rank: rank,
     unit: unit,
     contact: contact,
@@ -149,11 +205,39 @@ function addVIPVisitor() {
       alertBlock.style.display = "block";
       setTimeout(function () {
         alertBlock.style.display = "none";
-      }, 5000); // 5000 milliseconds = 5 seconds
+        location.reload(); 
+      }, 1000); // 5000 milliseconds = 5 seconds
       console.log("Response:", data); // Log the response received from the server
     })
     .catch((error) => console.error("Error:", error));
 }
+
+function clearInputs() {
+  // Clear regular visitor inputs
+  document.querySelector('input[name="reg-name"]').value = "";
+  document.querySelector('input[name="reg-designation"]').value = "";
+  document.querySelector('select[name="reg-rank"]').value = "";
+  document.querySelector('input[name="reg-unit"]').value = "";
+  document.querySelector('input[name="reg-contact"]').value = "";
+  document.querySelector('input[name="reg-purpose"]').value = "";
+
+  // Clear VIP visitor inputs
+  document.querySelector('input[name="vip-name"]').value = "";
+  document.querySelector('input[name="vip-designation"]').value = "";
+  document.querySelector('select[name="vip-rank"]').value = "";
+  document.querySelector('input[name="vip-unit"]').value = "";
+  document.querySelector('input[name="vip-contact"]').value = "";
+  document.querySelector('input[name="vip-purpose"]').value = "";
+  document.querySelector('input[name="vip-comment"]').value = "";
+
+  // Clear signature canvas
+  const canvas = document.getElementById("signatureCanvas");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+
 
 // Add event listener to the save button to call the add_visitor function
 document

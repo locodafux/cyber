@@ -35,7 +35,6 @@ function handleREGPost($pdo) {
         // Extract fields from the input data
         $name = $data['name'] ?? null;
         $designation = $data['designation'] ?? null;
-        $position = $data['position'] ?? null;
         $rank = $data['rank'] ?? null;
         $unit = $data['unit'] ?? null;
         $contact = $data['contact'] ?? null;
@@ -46,19 +45,18 @@ function handleREGPost($pdo) {
         // Begin a transaction
         $pdo->beginTransaction();
 
-        $sql = "INSERT INTO tb_regular (fullname, designation, position, rank, unit, contact_no, purpose_visit, time_in, time_out) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO tb_regular (fullname, designation, rank, unit, contact_no, purpose_visit, time_in, time_out) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
 
         // Bind parameters
         $stmt->bindParam(1, $name);
         $stmt->bindParam(2, $designation);
-        $stmt->bindParam(3, $position);
-        $stmt->bindParam(4, $rank);
-        $stmt->bindParam(5, $unit);
-        $stmt->bindParam(6, $contact);
-        $stmt->bindParam(7, $purpose);
-        $stmt->bindParam(8, $timeIn);
-        $stmt->bindParam(9, $timeOut);
+        $stmt->bindParam(3, $rank);
+        $stmt->bindParam(4, $unit);
+        $stmt->bindParam(5, $contact);
+        $stmt->bindParam(6, $purpose);
+        $stmt->bindParam(7, $timeIn);
+        $stmt->bindParam(8, $timeOut);
 
         // Execute the statement
         $stmt->execute();
@@ -67,6 +65,7 @@ function handleREGPost($pdo) {
         $pdo->commit();
 
         // Send a success response
+        
         echo json_encode(["message" => "Data added successfully"]);
     } catch (PDOException $e) {
         // Rollback the transaction on error
@@ -84,7 +83,6 @@ function handleVIPPost($pdo) {
         // Extract fields from the input data
         $name = $data['name'] ?? null;
         $designation = $data['designation'] ?? null;
-        $position = $data['position'] ?? null;
         $rank = $data['rank'] ?? null;
         $unit = $data['unit'] ?? null;
         $contact = $data['contact'] ?? null;
@@ -98,36 +96,34 @@ function handleVIPPost($pdo) {
         // Begin a transaction
         $pdo->beginTransaction();
 
-        $sql = "INSERT INTO tb_vip (fullname, designation, position, rank, unit, contact_no, purpose_visit, message, signature, images, time_in, time_out) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO tb_vip (fullname, designation, rank, unit, contact_no, purpose_visit, message, signature, images, time_in, time_out) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
 
         // Bind parameters
         $stmt->bindParam(1, $name);
         $stmt->bindParam(2, $designation);
-        $stmt->bindParam(3, $position);
-        $stmt->bindParam(4, $rank);
-        $stmt->bindParam(5, $unit);
-        $stmt->bindParam(6, $contact);
-        $stmt->bindParam(7, $purpose);
-        $stmt->bindParam(8, $comment);  
+        $stmt->bindParam(3, $rank);
+        $stmt->bindParam(4, $unit);
+        $stmt->bindParam(5, $contact);
+        $stmt->bindParam(6, $purpose);
+        $stmt->bindParam(7, $comment);  
 
         $signatureBinary = base64_decode(str_replace('data:image/png;base64,', '', $signature));
 
-        $stmt->bindParam(9, $signatureBinary);
+        $stmt->bindParam(8, $signatureBinary);
 
         // Convert the base64 encoded image data to binary
         $imageBinary = base64_decode(str_replace('data:image/png;base64,', '', $imageData));
-        $stmt->bindParam(10, $imageBinary, PDO::PARAM_LOB);
+        $stmt->bindParam(9, $imageBinary, PDO::PARAM_LOB);
 
-        $stmt->bindParam(11, $timeIn);
-        $stmt->bindParam(12, $timeOut);
+        $stmt->bindParam(10, $timeIn);
+        $stmt->bindParam(11, $timeOut);
 
         // Execute the statement
         $stmt->execute();
 
         // Commit the transaction
         $pdo->commit();
-
         // Send a success response
         echo json_encode(["message" => "Data added successfully"]);
     } catch (PDOException $e) {
@@ -138,3 +134,5 @@ function handleVIPPost($pdo) {
     }
 }
 ?>
+
+

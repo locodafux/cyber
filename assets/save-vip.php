@@ -26,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $sql = "UPDATE tb_vip SET 
                 fullname = '" . $data['name'] . "', 
                 designation = '" . $data['designation'] . "', 
-                position = '" . $data['position'] . "', 
                 rank = '" . $data['rank'] . "', 
                 unit = '" . $data['unit'] . "', 
                 contact_no = '" . $data['contact'] . "', 

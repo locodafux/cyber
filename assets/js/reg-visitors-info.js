@@ -27,7 +27,6 @@ function displayInfo(data) {
             <td>${visitor.reg_id}</td>
             <td>${visitor.fullname}</td>
             <td>${visitor.designation}</td>
-            <td>${visitor.position}</td>
             <td>${visitor.rank}</td>
             <td>${visitor.unit}</td>
             <td>${visitor.contact_no}</td>

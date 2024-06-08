@@ -18,7 +18,7 @@
 
 	function generateRow($conn){
 		$contents = '';
-        $sql = "SELECT reg_id, fullname, designation, position, rank, unit, contact_no, purpose_visit, DATE(created_at) AS date, TIME(time_in) AS time_in, TIME(time_out) AS time_out FROM tb_regular";
+        $sql = "SELECT reg_id, fullname, designation, rank, unit, contact_no, purpose_visit, DATE(created_at) AS date, TIME(time_in) AS time_in, TIME(time_out) AS time_out FROM tb_regular";
 
 		$query = $conn->query($sql);
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
@@ -28,7 +28,6 @@
              <td>" . $row['reg_id'] . "</td>
              <td>" . $row['fullname'] . "</td>
              <td>" . $row['designation'] . "</td>
-             <td>" . $row['position'] . "</td>
              <td>" . $row['rank'] . "</td>
              <td>" . $row['unit'] . "</td>
              <td>" . $row['contact_no'] . "</td>
@@ -67,8 +66,7 @@
            <tr>  
                   <th>I.D</th>
                         <th >Name</th>
-                        <th >Designation</th>
-                        <th >Position</th>
+                        <th >Designation/Position</th>
                         <th >Rank</th>
                         <th >Unit/Organization</th>
                         <th >Contact Number</th>

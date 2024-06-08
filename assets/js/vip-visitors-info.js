@@ -29,7 +29,6 @@ function displayVipInfo(data) {
             <td>${visitor.vip_id}</td>
             <td>${visitor.fullname}</td>
             <td>${visitor.designation}</td>
-            <td>${visitor.position}</td>
             <td>${visitor.rank}</td>
             <td>${visitor.unit}</td>
             <td>${visitor.contact_no}</td>
@@ -94,7 +93,6 @@ function displayVipInfo(data) {
           // Populate the edit fields with the visitor's information
           document.getElementById("edit-name").value = data.fullname;
           document.getElementById("edit-designation").value = data.designation;
-          document.getElementById("edit-position").value = data.position;
           // Populate other fields similarly
         })
         .catch((error) => console.error("Error fetching VIP info:", error));

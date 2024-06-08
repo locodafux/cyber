@@ -25,7 +25,7 @@
     // this method will get the information of regular visitors
     function handleGet($pdo) {
         try {
-            $sql = "SELECT * FROM tb_vip ";
+            $sql = "SELECT * FROM tb_vip";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

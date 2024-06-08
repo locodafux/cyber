@@ -131,7 +131,7 @@ if ($conn->connect_error) {
         <div class="reg-table-container p-3" style="display: block;">
         <?php
     // SQL query
-    $sql = "SELECT reg_id, fullname, designation, position, rank, unit, contact_no, purpose_visit, DATE(created_at) AS date, TIME(time_in) AS time_in, TIME(time_out) AS time_out FROM tb_regular";
+    $sql = "SELECT reg_id, fullname, designation, rank, unit, contact_no, purpose_visit, DATE(created_at) AS date, TIME(time_in) AS time_in, TIME(time_out) AS time_out FROM tb_regular";
 
     // Execute SQL query
     $result = $conn->query($sql);
@@ -145,7 +145,7 @@ if ($conn->connect_error) {
         }
         // HTML table start
         echo "<table class='table' id='regTable' border='1'>";
-        echo "<thead class='thead-dark'><tr><th>Reg ID</th><th>Full Name</th><th>Designation</th><th>Position</th><th>Rank</th><th>Unit</th><th>Contact No</th><th>Purpose of Visit</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Action</th></tr></thead><tbody>";
+        echo "<thead class='thead-dark'><tr><th>Reg ID</th><th>Full Name</th><th>Designation/Position</th><th>Rank</th><th>Unit</th><th>Contact No</th><th>Purpose of Visit</th><th>Date</th><th>Time In</th><th>Time Out</th><th>Action</th></tr></thead><tbody>";
         
         // Loop through the results array to populate the table rows
         foreach ($results as $row) {
@@ -153,7 +153,6 @@ if ($conn->connect_error) {
             echo "<td>" . $row['reg_id'] . "</td>";
             echo "<td>" . $row['fullname'] . "</td>";
             echo "<td>" . $row['designation'] . "</td>";
-            echo "<td>" . $row['position'] . "</td>";
             echo "<td>" . $row['rank'] . "</td>";
             echo "<td>" . $row['unit'] . "</td>";
             echo "<td>" . $row['contact_no'] . "</td>";
@@ -167,7 +166,8 @@ if ($conn->connect_error) {
                             <button class="dropdown-button">Action</button>
                             <div class="dropdown-content" style="display: none;">
                                 <button data-regid="' . $row['reg_id'] . '" class="edit-button">Edit</button>
-                                 <button class="reg-time-out-button" data-regid="' . $row['reg_id'] . '">Time Out</button>
+                                <button class="reg-time-out-button" data-regid="' . $row['reg_id'] . '">Time Out</button>
+                                <button class="reg-delete-button" delete-data-regid="' . $row['reg_id'] . '">Delete</button>
                             </div>
                         </div>
                     </td>';
@@ -185,8 +185,89 @@ if ($conn->connect_error) {
 </div>
 
 
+        <div class="vip-table-container p-3" >
+        <table class="table" id="vipTable" border="1">
+    <thead class="thead-dark">
+        <tr>
+            <th>Vip_id</th>
+            <th>Fullname</th>
+            <th>Designation/Position</th>
+            <th>Rank</th>
+            <th>Unit</th>
+            <th>Contact_no</th>
+            <th>Purpose_visit</th>
+            <th>Message</th>
+            <th>Signature</th>
+            <th>Image</th>
+            <th>Date</th>
+            <th>Time in</th>
+            <th>Time out</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        // Connect to your database
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "cybervlog";
+
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Fetch data from your database table
+        $sql = "SELECT vip_id, fullname, designation, rank, unit, contact_no, purpose_visit, message, signature, images, DATE_FORMAT(created_at, '%Y-%m-%d') AS date, TIME_FORMAT(time_in, '%H:%i:%s') AS time_in, TIME_FORMAT(time_out, '%H:%i:%s') AS time_out FROM tb_vip";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            // Output data of each row
+            while($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>".$row["vip_id"]."</td>";
+                echo "<td>".$row["fullname"]."</td>";
+                echo "<td>".$row["designation"]."</td>";
+                echo "<td>".$row["rank"]."</td>";
+                echo "<td>".$row["unit"]."</td>";
+                echo "<td>".$row["contact_no"]."</td>";
+                echo "<td>".$row["purpose_visit"]."</td>";
+                echo "<td>".$row["message"]."</td>";
+                echo "<td><img src='data:image/jpeg;base64,".base64_encode($row["signature"])."' style='max-width:100px'></td>";
+                // Displaying the image as a link
+                echo "<td><img src='data:image/jpeg;base64,".base64_encode($row["images"])."' style='max-width:100px'></td>";
+                echo "<td>".$row["date"]."</td>";
+                echo "<td>".$row["time_in"]."</td>";
+                $time_out_display = ($row['time_out'] == '00:00:00') ? 'TBD' : $row['time_out'];
+                echo "<td>" . $time_out_display . "</td>";
+                echo '  <td>
+                <div class="dropdown-container-vip">
+                    <button class="dropdown-button">Action</button>
+                    <div class="dropdown-content" style="display: none;">
+                        <button data-vipid="' . $row['vip_id'] . '" class="edit-vip-button">Edit</button>
+                        <button class="vip-time-out-button" data-vipid="' . $row['vip_id'] . '">Time Out</button>
+                        <button class="vip-delete-button" delete-data-vipid="' . $row['vip_id'] . '">Delete</button>
+                    </div>
+                </div>
+            </td>';
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='14'>0 results</td></tr>";
+        }
+        $conn->close();
+        ?>
+    </tbody>
+</table>
+</div>
+    </div>
+
 <script>
-    document.querySelectorAll('.reg-time-out-button').forEach(button => {
+
+document.querySelectorAll('.reg-time-out-button').forEach(button => {
         button.addEventListener('click', function() {
             const regId = this.getAttribute('data-regid');
             // Send AJAX request
@@ -214,91 +295,6 @@ if ($conn->connect_error) {
             xhr.send('reg_id=' + encodeURIComponent(regId));
         });
     });
-</script>
-
-
-        <div class="vip-table-container p-3" >
-        <table class="table" id="vipTable" border="1">
-    <thead class="thead-dark">
-        <tr>
-            <th>vip_id</th>
-            <th>fullname</th>
-            <th>designation</th>
-            <th>position</th>
-            <th>rank</th>
-            <th>unit</th>
-            <th>contact_no</th>
-            <th>purpose_visit</th>
-            <th>message</th>
-            <th>signature</th>
-            <th>image</th>
-            <th>date</th>
-            <th>time_in</th>
-            <th>time_out</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        // Connect to your database
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "cybervlog";
-
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        // Fetch data from your database table
-        $sql = "SELECT vip_id, fullname, designation, position, rank, unit, contact_no, purpose_visit, message, signature, images, DATE_FORMAT(created_at, '%Y-%m-%d') AS date, TIME_FORMAT(time_in, '%H:%i:%s') AS time_in, TIME_FORMAT(time_out, '%H:%i:%s') AS time_out FROM tb_vip";
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // Output data of each row
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>".$row["vip_id"]."</td>";
-                echo "<td>".$row["fullname"]."</td>";
-                echo "<td>".$row["designation"]."</td>";
-                echo "<td>".$row["position"]."</td>";
-                echo "<td>".$row["rank"]."</td>";
-                echo "<td>".$row["unit"]."</td>";
-                echo "<td>".$row["contact_no"]."</td>";
-                echo "<td>".$row["purpose_visit"]."</td>";
-                echo "<td>".$row["message"]."</td>";
-                echo "<td><img src='data:image/jpeg;base64,".base64_encode($row["signature"])."' style='max-width:100px'></td>";
-                // Displaying the image as a link
-                echo "<td><img src='data:image/jpeg;base64,".base64_encode($row["images"])."' style='max-width:100px'></td>";
-                echo "<td>".$row["date"]."</td>";
-                echo "<td>".$row["time_in"]."</td>";
-                $time_out_display = ($row['time_out'] == '00:00:00') ? 'TBD' : $row['time_out'];
-                echo "<td>" . $time_out_display . "</td>";
-                echo '  <td>
-                <div class="dropdown-container-vip">
-                    <button class="dropdown-button">Action</button>
-                    <div class="dropdown-content" style="display: none;">
-                        <button data-vipid="' . $row['vip_id'] . '" class="edit-vip-button">Edit</button>
-                         <button class="vip-time-out-button" data-vipid="' . $row['vip_id'] . '">Time Out</button>
-                    </div>
-                </div>
-            </td>';
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='14'>0 results</td></tr>";
-        }
-        $conn->close();
-        ?>
-    </tbody>
-</table>
-</div>
-    </div>
-
-<script>
 
 document.querySelectorAll('.vip-time-out-button').forEach(button => {
     button.addEventListener('click', function() {
@@ -306,6 +302,58 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
         // Send AJAX request
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'update_time_out.php');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = xhr.responseText;
+                if (response.startsWith('Error')) {
+                    alert(response);
+                } else {
+                    alert(response);
+                    window.location.reload();
+                }
+            } else {
+                alert('Error: ' + xhr.statusText);
+            }
+        };
+        xhr.send('vip_id=' + encodeURIComponent(vipId));
+    });
+});
+
+
+
+// JavaScript for regular delete button
+document.querySelectorAll('.reg-delete-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const regId = this.getAttribute('delete-data-regid');
+        // Send AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'delete_entry.php');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const response = xhr.responseText;
+                if (response.startsWith('Error')) {
+                    alert(response);
+                } else {
+                    alert(response);
+                    window.location.reload();
+                }
+            } else {
+                alert('Error: ' + xhr.statusText);
+            }
+        };
+        xhr.send('reg_id=' + encodeURIComponent(regId));
+    });
+});
+
+// JavaScript for VIP delete button
+document.querySelectorAll('.vip-delete-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const vipId = this.getAttribute('delete-data-vipid');
+        // Send AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'delete_entry.php');
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.onload = function() {
             if (xhr.status === 200) {
@@ -344,7 +392,6 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
     <div class="popup">
         <div class="popup-content">
             <div class="popup-title">Add Visitor</div>
-       
             <div class="popup-dropdown-container">
                 <div class="popup-guestType-button"> 
                     <span class="popup-RegularVis-btn"> Regular </span>
@@ -371,17 +418,12 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
 
                     <div class="inputs">
                         <div>
-                            <div class="label"> Designation: </div>
+                            <div class="label"> Designation/Position </div>
                             <input type="textbox" class="textbox" name="reg-designation">
                         </div>
                     </div>
 
-                    <div class="inputs">
-                        <div>
-                            <div class="label"> Position: </div>
-                            <input type="textbox" class="textbox" name="reg-position">
-                        </div>
-                    </div>
+                    
 
 
                     <div class="selects">
@@ -462,17 +504,12 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
 
                     <div class="inputs">
                         <div>
-                            <div class="label"> Designation: </div>
+                            <div class="label"> Designation/Position: </div>
                             <input type="textbox" class="textbox" name="vip-designation">
                         </div>
                     </div>
 
-                    <div class="inputs">
-                        <div>
-                            <div class="label">Position: </div>
-                            <input type="textbox" class="textbox" name="vip-position">
-                        </div>
-                    </div>
+                   
 
                     <div class="selects">
                     <label for="vip-rank">Rank:<br></label>
@@ -499,7 +536,14 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
                             <option value="Lieutenant general">Lieutenant general</option>
                             <option value="General">General</option>
                         </select>
-                            </div>
+                    </div>
+
+                    <div class="inputs">
+                        <div>
+                            <div class="label"> Contact no: </div>
+                            <input type="number" class="textbox" name="vip-contact">
+                        </div>
+                    </div>
                     
                     
                      
@@ -529,12 +573,7 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
                         </div>
                     </div>
 
-                    <div class="inputs">
-                        <div>
-                            <div class="label"> Contact no: </div>
-                            <input type="number" class="textbox" name="vip-contact">
-                        </div>
-                    </div>
+                   
 
               
 
@@ -585,17 +624,12 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
 
                 <div class="inputs">
                     <div>
-                        <div class="label"> Designation: </div>
+                        <div class="label"> Designation/Position: </div>
                         <input type="textbox" id="edit-reg-designation" class="textbox" name="reg-designation">
                     </div>
                 </div>
 
-                <div class="inputs">
-                    <div>
-                        <div class="label"> Position: </div>
-                        <input type="textbox" id="edit-reg-position" class="textbox" name="reg-position">
-                    </div>
-                </div>
+               
 
                 <div class="selects">
                     <label for="edit-reg-rank">Rank:</label>
@@ -677,17 +711,19 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
 
                 <div class="inputs">
                     <div>
-                        <div class="label"> Designation: </div>
+                        <div class="label"> Designation/Postion: </div>
                         <input type="textbox" id="edit-vip-designation" class="textbox" name="vip-designation">
                     </div>
                 </div>
 
                 <div class="inputs">
                     <div>
-                        <div class="label"> Position: </div>
-                        <input type="textbox" id="edit-vip-position" class="textbox" name="vip-position">
+                        <div class="label"> Contact no: </div>
+                        <input type="number" id="edit-vip-contact" class="textbox" name="vip-contact">
                     </div>
                 </div>
+
+                
 
                 <div class="selects">
                     <label for="edit-vip-rank">Rank:</label>
@@ -721,13 +757,6 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
             </div>
 
             <div class="text-input-container">
-
-                <div class="inputs">
-                    <div>
-                        <div class="label"> Contact no: </div>
-                        <input type="number" id="edit-vip-contact" class="textbox" name="vip-contact">
-                    </div>
-                </div>
 
                 <div class="inputs">
                     <div>
@@ -768,7 +797,6 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
         var vipId = document.getElementById('edit-vip-id').value;
         var name = document.getElementById('edit-vip-name').value;
         var designation = document.getElementById('edit-vip-designation').value;
-        var position = document.getElementById('edit-vip-position').value;
         var rank = document.getElementById('edit-vip-rank').value;
         var unit = document.getElementById('edit-vip-unit').value;
         var contact = document.getElementById('edit-vip-contact').value;
@@ -780,7 +808,6 @@ document.querySelectorAll('.vip-time-out-button').forEach(button => {
             vipId: vipId,
             name: name,
             designation: designation,
-            position: position,
             rank: rank,
             unit: unit,
             contact: contact,
@@ -896,7 +923,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 // You can do further processing here, like updating HTML elements with the data
             document.getElementById('edit-vip-name').value = data.fullname;
             document.getElementById('edit-vip-designation').value = data.designation;
-            document.getElementById('edit-vip-position').value = data.position;
             document.getElementById('edit-vip-rank').value = data.rank;
             document.getElementById('edit-vip-unit').value = data.unit;
             document.getElementById('edit-vip-contact').value = data.contact_no;
@@ -939,7 +965,6 @@ document.addEventListener("DOMContentLoaded", function() {
         var dropdownButtons = document.querySelectorAll('.dropdown-button');
         const editNameInput = document.getElementById('edit-reg-name');
         const editDesignationInput = document.getElementById('edit-reg-designation');
-        const editPositionInput = document.getElementById('edit-reg-position');
         const editRankSelect = document.getElementById('edit-reg-rank');
         const editUnitInput = document.getElementById('edit-reg-unit');
         const editContactInput = document.getElementById('edit-reg-contact');
@@ -959,7 +984,6 @@ document.addEventListener("DOMContentLoaded", function() {
           console.log(data);
           editNameInput.value = data.fullname;
         editDesignationInput.value = data.designation;
-        editPositionInput.value = data.position;
         // For the rank select, find the option with the corresponding value and select it
         editRankSelect.querySelectorAll('option').forEach(function(option) {
     // Check if the option value matches the data.rank

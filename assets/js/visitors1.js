@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var regId = document.getElementById("edit-id").value;
     var name = document.getElementById("edit-reg-name").value;
     var designation = document.getElementById("edit-reg-designation").value;
-    var position = document.getElementById("edit-reg-position").value;
     var rank = document.getElementById("edit-reg-rank").value;
     var unit = document.getElementById("edit-reg-unit").value;
     var contact = document.getElementById("edit-reg-contact").value;
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
       regId: regId,
       name: name,
       designation: designation,
-      position: position,
       rank: rank,
       unit: unit,
       contact: contact,

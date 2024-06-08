@@ -299,6 +299,7 @@ body {
     cursor: pointer;
 }
 
+
 .addGuest-btn:hover {
     background-color: var(--green-medium);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -308,6 +309,36 @@ body {
     color: var(--secondary-text-color);
     font-size: 1.2vw;
 }
+
+
+.addUser-btn {
+    height: 5vh;
+    width: 8vw;
+    border-radius: 1vh;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+    margin-left: 3vw;;
+    cursor: pointer;
+}
+
+
+.addUser-btn:hover {
+    background-color: var(--green-medium);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addUser-btn-text {
+    color: var(--secondary-text-color);
+    font-size: 1.2vw;
+}
+
+
+
+
+
 
 .table1 {
     width: 100%;
@@ -451,7 +482,8 @@ body {
 
 
 .reg-table-container,
-.vip-table-container {
+.vip-table-container,
+.users-table-container {
     width: 98%;
     height: 100%;
     background: var(--secondary-text-color);
@@ -463,13 +495,15 @@ body {
 }
 
 .reg-table-container table,
-.vip-table-container table {
+.vip-table-container table,
+.users-table-container {
     width: 100%;
     border-collapse: collapse;
 }
 
 .reg-table thead,
-.vip-table thead {
+.vip-table thead,
+.users-table thead {
     background: var(--green-pale);
     color: #ffffff;
     text-align: center;
@@ -477,13 +511,15 @@ body {
 }
 
 .reg-table-container  th, td,
-.vip-table-container  th, td {
+.vip-table-container  th, td,
+.users-table-container  th, td {
     padding: 1.2vh 1.5vh;
     text-align: center;
 }
 
 .reg-table-container tr:nth-child(even),
-.vip-table-container tr:nth-child(even) {
+.vip-table-container tr:nth-child(even),
+.users-table-container tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
@@ -593,6 +629,7 @@ body {
     justify-content: flex-start; /* Align content to the top */
 }
 
+
 .popup-content .popup-title {
     margin-top: 3vh;
     color: var(--primary-text-color);
@@ -626,6 +663,13 @@ body {
     
     /* background-color: #0B5D0A; */
 }
+
+.popup.show {
+    display: flex;
+}
+
+
+
 
 .image-container .image-holder {
     min-width: 10vw;
@@ -746,6 +790,22 @@ body {
 }
 
 .popup-content .popup-button-container div{
+    margin: 2vh;
+    width: 7vw; /* Adjust the width as needed */
+    height: 5vh;
+    display: flex;
+    justify-content: center; /* Center the image container */
+    align-items: center;
+    background: var(--green-light);
+
+    font-size: 2vh;
+    color: var(--secondary-text-color);
+
+    border-radius: 1vh;
+    cursor: pointer;
+}
+
+.popup-content .popup-button-container button{
     margin: 2vh;
     width: 7vw; /* Adjust the width as needed */
     height: 5vh;

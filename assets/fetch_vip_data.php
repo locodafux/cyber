@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 
 // Fetch data based on the condition (where id = 1)
 $id = $_GET['id']; // Change this to the desired ID
-$sql = "SELECT fullname, designation, position, rank, unit, contact_no, purpose_visit, `message` FROM `tb_vip` WHERE vip_id = $id;"; // Replace "your_table" with your actual table name
+$sql = "SELECT fullname, designation, rank, unit, contact_no, purpose_visit, `message` FROM `tb_vip` WHERE vip_id = $id;"; // Replace "your_table" with your actual table name
 $result = $conn->query($sql);
 
 // Fetch data and convert it to JSON
